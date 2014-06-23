@@ -25,7 +25,7 @@ cd angularjs_seed
 Install dependencies
 ```sh
 npm install
-bower install
+bower install  # Should be called automatically after npm install
 ```
 
 ##Usage

@@ -1,10 +1,9 @@
-# TODO: https://github.com/rafriki/angular-seed-web-starter-kit/blob/master/gulpfile.js
 gulp = require 'gulp'
 open = require 'open'
 es = require 'event-stream'
-loader = require 'gulp-load-plugins'
-$ = loader()
+$ = do require 'gulp-load-plugins'
 runSequence = require 'run-sequence'
+
 # TODO: gulp-sourcemaps, but needs update for gulp-concat first.
 
 paths =
@@ -120,6 +119,6 @@ gulp.task 'compile', ['clean'], (cb) ->
 # Production build
 gulp.task 'build', ['clean'], (cb) ->
   production = true
-  runSequence(['scripts', 'styles', 'images', 'partials', 'fonts'], 'index', cb)
+  runSequence(['scripts', 'styles', 'images', 'partials', 'fonts', 'jshint'], 'index', cb)
 
 gulp.task 'default', ['serve']
