@@ -1,0 +1,16 @@
+<!doctype html>
+<!DOCTYPE html>
+<html lang="en" ng-app="app" ng-controller="MainController as main">
+<head>
+	<title>{{ main.title }}</title>
+	<!-- inject:css -->
+	<!-- endinject -->
+</head>
+<body ng-controller="IndexController as index">
+	<h1>{{ index.title }}</h1>
+	<button ng-click="index.test()">Test</button>
+
+	<!-- inject:js -->
+	<!-- endinject -->
+</body>
+</html>
