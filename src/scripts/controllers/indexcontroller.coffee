@@ -4,9 +4,13 @@
 app = angular.module 'app'
 
 class IndexController
-    @$inject = ['$scope']
+    @$inject = []
 
-    constructor: ($scope) ->
+    constructor: ->
       @title = 'Index title'
+
+    test: ->
+      console.log 'Hello world'
+
 
 app.controller 'IndexController', IndexController

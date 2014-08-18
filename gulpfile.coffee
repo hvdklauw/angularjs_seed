@@ -3,16 +3,17 @@ open = require 'open'
 es = require 'event-stream'
 $ = do require 'gulp-load-plugins'
 runSequence = require 'run-sequence'
+bowerFiles = require 'main-bower-files'
 
-# TODO: gulp-sourcemaps, but needs update for gulp-concat first.
+# TODO: gulp-plumber
 
 paths =
-  index:     'src/index.jade'
+  index:     'src/index.html'
   fonts:     'src/fonts/**/*'
   images:    'src/images/**/*'
   styles:    'src/styles/**/*.less'
   scripts:   'src/scripts/**/*.coffee'
-  partials:  'src/partials/**/*.jade'
+  partials:  'src/partials/**/*.html'
 
 
 production = false
@@ -35,23 +36,24 @@ gulp.task 'jshint', ['scripts'], ->
 # Compile coffee, generate source maps, trigger livereload
 gulp.task 'scripts', ->
   gulp.src paths.scripts
-    .pipe $.if !production, gulp.dest 'app/scripts'
-    .pipe $.coffee
-      bare: no
-      sourceMap: !production
+    .pipe $.sourcemaps.init()
+    .pipe gulp.dest 'app/scripts'
+    .pipe $.coffee()
     .on 'error', handleError
-    .pipe $.if production, $.ngmin()
+    .pipe $.if production, $.ngAnnotate()
     .pipe $.if production, $.uglify()
-    .pipe $.if production, $.concat 'app.js'
+    #.pipe $.if production, $.concatSourcemap 'app.js'
+    .pipe $.sourcemaps.write()
     .pipe gulp.dest 'app/scripts'
     .pipe $.if !production, $.connect.reload()
 
 #Compile stylus, trigger livereload
 gulp.task 'styles', ->
   gulp.src paths.styles
-    .pipe $.less({sourceMap: !production})
-    .on 'error', handleError
-    .pipe $.csso()
+    .pipe gulp.dest 'app/styles'
+    .pipe $.sourcemaps.init()
+    .pipe $.less(compress: production).on 'error', handleError
+    .pipe $.sourcemaps.write()
     .pipe gulp.dest 'app/styles'
     .pipe $.if !production, $.connect.reload()
 
@@ -70,18 +72,14 @@ gulp.task 'fonts', ->
 #Compile Jade, trigger livereload
 gulp.task 'partials', ->
   gulp.src paths.partials
-    .pipe $.jade pretty: !production
-    .on 'error', handleError
     .pipe gulp.dest 'app/partials'
 
 
 #Compile index.jade, inject compiled stylesheets, inject compiled scripts, inject bower packages
 gulp.task 'index', ['scripts', 'styles'], ->
   gulp.src paths.index
-    .pipe $.jade pretty: !production
-    .on 'error', handleError
     .pipe $.inject(es.merge(
-      $.bowerFiles read: no
+      gulp.src bowerFiles(), read: no
     ,
       gulp.src './app/styles/**/*.css', read: no
     ,
@@ -96,13 +94,13 @@ gulp.task 'serve', ['compile'], (cb) ->
     port       : 1337
     root       : 'app'
     livereload : yes
-  open 'http://localhost:1337'
+  #open 'http://localhost:1337'
   runSequence 'watch', cb
 
 # Clean build folder
 gulp.task 'clean', ->
   gulp.src ['app/**/*', '!app/bower_components', '!app/bower_components/**'], read: no
-    .pipe $.clean()
+    .pipe $.rimraf()
 
 # Register tasks
 gulp.task 'watch', ->
@@ -113,12 +111,12 @@ gulp.task 'watch', ->
   gulp.watch paths.index, ['index']
 
 # Compiles all parts
-gulp.task 'compile', ['clean'], (cb) ->
+gulp.task 'compile', [], (cb) ->
   runSequence(['scripts', 'styles', 'images', 'partials', 'fonts'], 'index', cb)
 
 # Production build
-gulp.task 'build', ['clean'], (cb) ->
+gulp.task 'build', (cb) ->
   production = true
-  runSequence(['scripts', 'styles', 'images', 'partials', 'fonts', 'jshint'], 'index', cb)
+  runSequence('clean', ['scripts', 'styles', 'images', 'partials', 'fonts', 'jshint'], 'index', cb)
 
 gulp.task 'default', ['serve']

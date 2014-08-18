@@ -103,6 +103,11 @@ angularjs_seed
 ```
 
 
-##Caveats
+##FAQ
 
-For the injection of javascript and css to work the space after the comments is important, if your editor strips trailing whitespace on save you might want to tweak your editor or tweak the starttag and endtag of gulp-inject.
+### Q: I get a ENOSPC error for the watch task
+Answer: You ran into the limit of your file system's watches, for unix use:
+```sh
+  echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+```
+
