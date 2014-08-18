@@ -5,8 +5,6 @@ $ = do require 'gulp-load-plugins'
 runSequence = require 'run-sequence'
 bowerFiles = require 'main-bower-files'
 
-# TODO: gulp-plumber
-
 paths =
   index:     'src/index.html'
   fonts:     'src/fonts/**/*'
@@ -18,17 +16,12 @@ paths =
 
 production = false
 
-# Error are fatal, except when not in production
-handleError = (error) ->
-  $.util.log(error.message)
-  if production
-    process.exit(1)
-
 ############################## Builds ##############################
 
 
 gulp.task 'jshint', ['scripts'], ->
   gulp.src 'app/scripts'
+    .pipe $.plumber()
     .pipe $.jshint()
     .pipe $.jshint.reporter('jshint-stylish')
     .pipe $.jshint.reporter('fail')
@@ -36,10 +29,10 @@ gulp.task 'jshint', ['scripts'], ->
 # Compile coffee, generate source maps, trigger livereload
 gulp.task 'scripts', ->
   gulp.src paths.scripts
+    .pipe $.plumber()
     .pipe $.sourcemaps.init()
     .pipe gulp.dest 'app/scripts'
     .pipe $.coffee()
-    .on 'error', handleError
     .pipe $.if production, $.ngAnnotate()
     .pipe $.if production, $.uglify()
     #.pipe $.if production, $.concatSourcemap 'app.js'
@@ -50,9 +43,10 @@ gulp.task 'scripts', ->
 #Compile stylus, trigger livereload
 gulp.task 'styles', ->
   gulp.src paths.styles
+    .pipe $.plumber()
     .pipe gulp.dest 'app/styles'
     .pipe $.sourcemaps.init()
-    .pipe $.less(compress: production).on 'error', handleError
+    .pipe $.less(compress: production)
     .pipe $.sourcemaps.write()
     .pipe gulp.dest 'app/styles'
     .pipe $.if !production, $.connect.reload()
@@ -60,6 +54,7 @@ gulp.task 'styles', ->
 #Copy images, trigger livereload
 gulp.task 'images', ->
   gulp.src paths.images
+    .pipe $.plumber()
     .pipe $.if production, $.imagemin()
     .pipe gulp.dest 'app/images'
     .pipe $.if !production, $.connect.reload()
@@ -67,17 +62,20 @@ gulp.task 'images', ->
 # Copy fonts
 gulp.task 'fonts', ->
   gulp.src paths.fonts
+    .pipe $.plumber()
     .pipe gulp.dest 'app/fonts'
 
 #Compile Jade, trigger livereload
 gulp.task 'partials', ->
   gulp.src paths.partials
+    .pipe $.plumber()
     .pipe gulp.dest 'app/partials'
 
 
 #Compile index.jade, inject compiled stylesheets, inject compiled scripts, inject bower packages
 gulp.task 'index', ['scripts', 'styles'], ->
   gulp.src paths.index
+    .pipe $.plumber()
     .pipe $.inject(es.merge(
       gulp.src bowerFiles(), read: no
     ,
@@ -100,6 +98,7 @@ gulp.task 'serve', ['compile'], (cb) ->
 # Clean build folder
 gulp.task 'clean', ->
   gulp.src ['app/**/*', '!app/bower_components', '!app/bower_components/**'], read: no
+    .pipe $.plumber()
     .pipe $.rimraf()
 
 # Register tasks
