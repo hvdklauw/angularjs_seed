@@ -15,12 +15,13 @@ paths =
 
 
 production = false
+prefix = 'app'
 
 ############################## Builds ##############################
 
 
 gulp.task 'jshint', ['scripts'], ->
-  gulp.src 'app/scripts'
+  gulp.src "#{ prefix }/scripts"
     .pipe $.plumber()
     .pipe $.jshint()
     .pipe $.jshint.reporter('jshint-stylish')
@@ -31,24 +32,24 @@ gulp.task 'scripts', ->
   gulp.src paths.scripts
     .pipe $.plumber()
     .pipe $.sourcemaps.init()
-    .pipe gulp.dest 'app/scripts'
+    .pipe gulp.dest "#{ prefix }/scripts"
     .pipe $.coffee()
     .pipe $.if production, $.ngAnnotate()
     .pipe $.if production, $.uglify()
-    #.pipe $.if production, $.concatSourcemap 'app.js'
+    .pipe $.if production, $.concatSourcemap 'app.js'
     .pipe $.sourcemaps.write()
-    .pipe gulp.dest 'app/scripts'
+    .pipe gulp.dest "#{ prefix }/scripts"
     .pipe $.if !production, $.connect.reload()
 
 #Compile stylus, trigger livereload
 gulp.task 'styles', ->
   gulp.src paths.styles
     .pipe $.plumber()
-    .pipe gulp.dest 'app/styles'
+    .pipe gulp.dest "#{ prefix }/styles"
     .pipe $.sourcemaps.init()
     .pipe $.less(compress: production)
-    .pipe $.sourcemaps.write()
-    .pipe gulp.dest 'app/styles'
+    .pipe $.sourcemaps.write('.')
+    .pipe gulp.dest "#{ prefix }/styles"
     .pipe $.if !production, $.connect.reload()
 
 #Copy images, trigger livereload
@@ -56,20 +57,20 @@ gulp.task 'images', ->
   gulp.src paths.images
     .pipe $.plumber()
     .pipe $.if production, $.imagemin()
-    .pipe gulp.dest 'app/images'
+    .pipe gulp.dest "#{ prefix }/images"
     .pipe $.if !production, $.connect.reload()
 
 # Copy fonts
 gulp.task 'fonts', ->
   gulp.src paths.fonts
     .pipe $.plumber()
-    .pipe gulp.dest 'app/fonts'
+    .pipe gulp.dest "#{ prefix }/fonts"
 
 #Compile Jade, trigger livereload
 gulp.task 'partials', ->
   gulp.src paths.partials
     .pipe $.plumber()
-    .pipe gulp.dest 'app/partials'
+    .pipe gulp.dest "#{ prefix }/partials"
 
 
 #Compile index.jade, inject compiled stylesheets, inject compiled scripts, inject bower packages
@@ -79,11 +80,11 @@ gulp.task 'index', ['scripts', 'styles'], ->
     .pipe $.inject(es.merge(
       gulp.src bowerFiles(), read: no
     ,
-      gulp.src './app/styles/**/*.css', read: no
+      gulp.src "#{ prefix }/styles/**/*.css", read: no
     ,
-      gulp.src './app/scripts/**/*.js', read: no
-    ), ignorePath: '/app')
-    .pipe gulp.dest 'app/'
+      gulp.src ["#{ prefix }/scripts/**/*.js"], read: no
+    ), ignorePath: "#{ prefix }")
+    .pipe gulp.dest prefix
     .pipe $.if !production, $.connect.reload()
 
 # Launch server and open app in default browser
@@ -97,7 +98,12 @@ gulp.task 'serve', ['compile'], (cb) ->
 
 # Clean build folder
 gulp.task 'clean', ->
-  gulp.src ['app/**/*', '!app/bower_components', '!app/bower_components/**'], read: no
+  gulp.src([
+      "#{ prefix }/index.html",
+      "#{ prefix }/styles",
+      "#{ prefix }/scripts",
+      '!app/bower_components',
+      '!app/bower_components/**'], read: no)
     .pipe $.plumber()
     .pipe $.rimraf()
 

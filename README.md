@@ -5,13 +5,12 @@ AngularJS application boilerplate.
 [Because](http://xkcd.com/927/)
 
 ##Features
-* Jade instead of html
 * Coffee-Script instead of JS
 * Less instead of css
 * Automatic compilation
 * Livereload without any plugins
 * Development build with source maps
-* Production build with optimizations
+* Production build with optimizations and source maps
 * Automatic scripts and stylesheets injection (including bower files)
 
 ##Installation
@@ -71,7 +70,6 @@ angularjs_seed
 ### Development build
 
 ```sh
-angularjs_seed
  app                      # development build
   ├── bower_components
   ├── images
@@ -98,8 +96,10 @@ angularjs_seed
   ├── partials             # minified partials
   ├── scripts
   │   └── app.js           # minified and concatenated javascripts
+  |   └── *                # Sourcefiles for sourcemaps
   └── styles
       └── style.css        # minified and concatenated styles
+      └── *                # Sourcefiles for sourcemap
 ```
 
 
