@@ -7,10 +7,10 @@ class IndexController
     @$inject = []
 
     constructor: ->
-      @title = 'Index title'
+        @title = 'Index title'
 
     test: ->
-      console.log 'Hello world'
+        console.log 'Hello world'
 
 
 app.controller 'IndexController', IndexController

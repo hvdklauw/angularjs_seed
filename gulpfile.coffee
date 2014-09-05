@@ -71,6 +71,7 @@ gulp.task 'partials', ->
   gulp.src paths.partials
     .pipe $.plumber()
     .pipe gulp.dest "#{ prefix }/partials"
+    .pipe $.if !production, $.connect.reload()
 
 
 #Compile index.jade, inject compiled stylesheets, inject compiled scripts, inject bower packages

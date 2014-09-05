@@ -7,6 +7,6 @@ class MainController
     @$inject = ['$scope']
 
     constructor: ($scope) ->
-      @title = 'Main title'
+        @title = 'Main title'
 
 app.controller 'MainController', MainController
