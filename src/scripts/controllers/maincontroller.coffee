@@ -4,9 +4,9 @@
 app = angular.module 'app'
 
 class MainController
-    @$inject = ['$scope']
+  @$inject = ['$scope']
 
-    constructor: ($scope) ->
-        @title = 'Main title'
+  constructor: ($scope) ->
+    @title = 'Main title'
 
 app.controller 'MainController', MainController

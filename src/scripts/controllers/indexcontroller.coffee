@@ -4,13 +4,13 @@
 app = angular.module 'app'
 
 class IndexController
-    @$inject = []
+  @$inject = []
 
-    constructor: ->
-        @title = 'Index title'
+  constructor: ->
+    @title = 'Index title'
 
-    test: ->
-        console.log 'Hello world'
+  test: ->
+    console.log 'Hello world'
 
 
 app.controller 'IndexController', IndexController
