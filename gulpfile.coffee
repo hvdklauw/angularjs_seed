@@ -36,7 +36,7 @@ gulp.task 'scripts', ->
     .pipe $.coffee()
     .pipe $.if production, $.ngAnnotate()
     .pipe $.if production, $.uglify()
-    .pipe $.if production, $.concatSourcemap 'app.js'
+    .pipe $.if production, $.concat 'app.js'
     .pipe $.sourcemaps.write()
     .pipe gulp.dest "#{ prefix }/scripts"
     .pipe $.if !production, $.connect.reload()
