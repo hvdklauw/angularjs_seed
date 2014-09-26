@@ -27,6 +27,13 @@ gulp.task 'jshint', ['scripts'], ->
     .pipe $.jshint.reporter('jshint-stylish')
     .pipe $.jshint.reporter('fail')
 
+gulp.task 'coffeelint', ->
+  gulp.src paths.scripts
+    .pipe $.plumber()
+    .pipe $.coffeelint()
+    .pipe $.coffeelint.reporter()
+    .pipe $.coffeelint.reporter('fail')
+
 # Compile coffee, generate source maps, trigger livereload
 gulp.task 'scripts', ->
   gulp.src paths.scripts
@@ -123,6 +130,6 @@ gulp.task 'compile', [], (cb) ->
 # Production build
 gulp.task 'build', (cb) ->
   production = true
-  runSequence('clean', ['scripts', 'styles', 'images', 'partials', 'fonts', 'jshint'], 'index', cb)
+  runSequence('clean', 'coffeelint', ['scripts', 'styles', 'images', 'partials', 'fonts', 'jshint'], 'index', cb)
 
 gulp.task 'default', ['serve']
