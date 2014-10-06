@@ -3,13 +3,17 @@
 <html lang="en" ng-app="app" ng-controller="MainController as main">
 <head>
 	<title>{{ main.title }}</title>
+    <!-- bower:css -->
+    <!-- endinject -->
 	<!-- inject:css -->
 	<!-- endinject -->
 </head>
 <body ng-controller="IndexController as index">
 	<h1>{{ index.title }}</h1>
 	<button ng-click="index.test()">Test</button>
-
+    <i class="uk-icon-cog"></i>
+    <!-- bower:js -->
+    <!-- endinject -->
 	<!-- inject:js -->
 	<!-- endinject -->
 </body>

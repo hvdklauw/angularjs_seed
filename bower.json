@@ -20,6 +20,17 @@
     "angular-loader": "~1.2.16",
     "angular-resource": "~1.2.16",
     "angular-animate": "~1.2.16",
-    "angular-cookies": "~1.2.16"
+    "angular-cookies": "~1.2.16",
+    "uikit": "~2.10.0"
+  },
+  "overrides": {
+    "uikit": {
+        "main": [
+            "./dist/js/uikit.min.js",
+            "./dist/fonts/fontawesome-webfont.eot",
+            "./dist/fonts/fontawesome-webfont.ttf",
+            "./dist/fonts/fontawesome-webfont.woff"
+        ]
+    }
   }
 }

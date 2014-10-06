@@ -81,13 +81,14 @@ gulp.task 'partials', ->
     .pipe $.if !production, $.connect.reload()
 
 
-#Compile index.jade, inject compiled stylesheets, inject compiled scripts, inject bower packages
+#inject compiled stylesheets, inject compiled scripts, inject bower packages
 gulp.task 'index', ['scripts', 'styles'], ->
   gulp.src paths.index
     .pipe $.plumber()
-    .pipe $.inject(es.merge(
+    .pipe $.inject(
       gulp.src bowerFiles(), read: no
-    ,
+    , {ignorePath: "#{ prefix }", name: 'bower'})
+    .pipe $.inject(es.merge(
       gulp.src "#{ prefix }/styles/**/*.css", read: no
     ,
       gulp.src ["#{ prefix }/scripts/**/*.js"], read: no
@@ -110,6 +111,7 @@ gulp.task 'clean', ->
       "#{ prefix }/index.html",
       "#{ prefix }/styles",
       "#{ prefix }/scripts",
+      "#{ prefix }/fonts",
       '!app/bower_components',
       '!app/bower_components/**'], read: no)
     .pipe $.plumber()
