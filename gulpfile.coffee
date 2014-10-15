@@ -54,7 +54,10 @@ gulp.task 'styles', ->
     .pipe $.plumber()
     .pipe gulp.dest "#{ prefix }/styles"
     .pipe $.sourcemaps.init()
-    .pipe $.less(compress: production)
+    .pipe $.less(
+      compress: production
+      paths: "app/"
+    )
     .pipe $.sourcemaps.write('.')
     .pipe gulp.dest "#{ prefix }/styles"
     .pipe $.if !production, $.connect.reload()
