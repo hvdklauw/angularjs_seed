@@ -41,7 +41,7 @@ gulp.task 'scripts', ->
     .pipe $.sourcemaps.init()
     .pipe gulp.dest "#{ prefix }/scripts"
     .pipe $.coffee()
-    .pipe $.if production, $.ngAnnotate()
+    .pipe $.ngAnnotate()
     .pipe $.if production, $.uglify()
     .pipe $.if production, $.concat 'app.js'
     .pipe $.sourcemaps.write()
@@ -56,7 +56,7 @@ gulp.task 'styles', ->
     .pipe $.sourcemaps.init()
     .pipe $.less(
       compress: production
-      paths: "app/"
+      paths: ["app/", 'src/']
     )
     .pipe $.sourcemaps.write('.')
     .pipe gulp.dest "#{ prefix }/styles"
