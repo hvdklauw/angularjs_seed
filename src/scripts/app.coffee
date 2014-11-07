@@ -4,4 +4,4 @@
 app = angular.module 'app', []
 
 app.config ($compileProvider) ->
-  $compileProvers.debugInfoEnabled false
+  $compileProvider.debugInfoEnabled false
