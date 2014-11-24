@@ -1,5 +1,6 @@
 gulp = require 'gulp'
 open = require 'open'
+del = require 'del'
 es = require 'event-stream'
 $ = do require 'gulp-load-plugins'
 runSequence = require 'run-sequence'
@@ -110,15 +111,14 @@ gulp.task 'serve', ['compile'], (cb) ->
 
 # Clean build folder
 gulp.task 'clean', ->
-  gulp.src([
+  del([
       "#{ prefix }/index.html",
       "#{ prefix }/styles",
       "#{ prefix }/scripts",
       "#{ prefix }/fonts",
       '!app/bower_components',
-      '!app/bower_components/**'], read: no)
-    .pipe $.plumber()
-    .pipe $.rimraf()
+      '!app/bower_components/**'
+  ])
 
 # Register tasks
 gulp.task 'watch', ->
